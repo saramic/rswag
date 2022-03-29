@@ -21,6 +21,14 @@ RSpec.describe 'Blogs API', type: :request, swagger_doc: 'v1/swagger.json' do
       response '201', 'blog created' do
         # schema '$ref' => '#/definitions/blog'
         run_test!
+
+        after do |example|
+          example.metadata[:operation][:requestBody] ||= {}
+          example.metadata[:operation][:requestBody][:content] ||= {}
+          example.metadata[:operation][:requestBody][:content]["application/json"] = {
+            example: params,
+          }
+        end
       end
 
       response '422', 'invalid request' do
